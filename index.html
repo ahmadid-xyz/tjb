@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>TJB AI | Quantum Interface</title>
+ <style>
+ :root {
+ --quantum-primary: #0f172a;
+ --neon-accent: #00f0ff;
+ --hologram-blue: rgba(0, 240, 255, 0.15);
+ --neuro-dark: #020617;
+ --neuro-light: #f8fafc;
+ --neuro-border: rgba(255, 255, 255, 0.1);
+ --neuro-glow: 0 0 15px var(--neon-accent);
+}
+
+* {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+ font-family: 'Inter', 'SF Pro Display', -apple-system, system-ui;
+}
+
+html, body {
+ height: 100%;
+ overflow: hidden;
+}
+
+body {
+ background: var(--quantum-primary);
+ color: var(--neuro-light);
+ display: flex;
+ flex-direction: column;
+ background-image: 
+ radial-gradient(circle at 25% 25%, var(--hologram-blue) 0%, transparent 50%),
+ radial-gradient(circle at 75% 75%, var(--hologram-blue) 0%, transparent 50%);
+}
+
+/* Quantum Header */
+.neuro-header {
+ padding: 1.5rem;
+ border-bottom: 1px solid var(--neuro-border);
+ background: rgba(15, 23, 42, 0.8);
+ backdrop-filter: blur(10px);
+ display: flex;
+ align-items: center;
+ gap: 1rem;
+}
+
+.neuro-logo {
+ display: flex;
+ align-items: center;
+ gap: 0.75rem;
+}
+
+.logo-pulse {
+ width: 12px;
+ height: 12px;
+ background: var(--neon-accent);
+ border-radius: 50%;
+ box-shadow: var(--neuro-glow);
+ animation: pulse 2s infinite;
+}
+
+/* Neuro Chat Container */
+.neuro-container {
+ flex: 1;
+ display: flex;
+ flex-direction: column;
+ max-width: 100%;
+ height: calc(100vh - 72px);
+ position: relative;
+ overflow: hidden;
+}
+
+/* FIX SCROLL */
+.neuro-container {
+ flex-grow: 1;
+ height: calc(100vh - 72px);
+ display: flex;
+ flex-direction: column;
+ overflow: hidden;
+}
+
+.neuro-messages {
+ flex-grow: 1;
+ overflow-y: auto;
+ padding: 2rem 1.5rem;
+ display: flex;
+ flex-direction: column;
+ gap: 1.5rem;
+ background: transparent;
+ position: relative;
+ z-index: 1;
+ min-height: 0;
+}
+
+/* Quantum Message Bubbles */
+.neuro-message {
+ max-width: 800px;
+ width: fit-content;
+ padding: 1.25rem 1.5rem;
+ border-radius: 1rem;
+ line-height: 1.6;
+ font-size: 1.05rem;
+ position: relative;
+ animation: quantumAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+ word-break: break-word;
+ white-space: pre-wrap;
+ backdrop-filter: blur(5px);
+ border: 1px solid var(--neuro-border);
+ box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.neuro-user {
+ background: rgba(0, 240, 255, 0.05);
+ margin-left: auto;
+ border-top-right-radius: 0.25rem;
+ border: 1px solid rgba(0, 240, 255, 0.2);
+ box-shadow: 0 0 20px rgba(0, 240, 255, 0.05);
+}
+
+.neuro-ai {
+ background: rgba(15, 23, 42, 0.7);
+ margin-right: auto;
+ border-top-left-radius: 0.25rem;
+ border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Neuro Interface Input */
+.neuro-input-container {
+ position: relative;
+ padding: 1.5rem;
+ background: rgba(2, 6, 23, 0.7);
+ border-top: 1px solid var(--neuro-border);
+ backdrop-filter: blur(10px);
+ z-index: 2;
+}
+
+.neuro-input {
+ width: 100%;
+ padding: 1.25rem 5rem 1.25rem 2rem;
+ border: 1px solid var(--neuro-border);
+ border-radius: 1rem;
+ font-size: 1.05rem;
+ resize: none;
+ max-height: 200px;
+ background: rgba(15, 23, 42, 0.5);
+ color: var(--neuro-light);
+ line-height: 1.6;
+ transition: all 0.3s ease;
+}
+
+.neuro-input:focus {
+ outline: none;
+ border-color: var(--neon-accent);
+ box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.2);
+}
+
+/* Quantum Send Button */
+.neuro-send {
+ position: absolute;
+ right: 2.5rem;
+ top: 50%;
+ transform: translateY(-50%);
+ background: var(--neon-accent);
+ border: none;
+ padding: 0.75rem;
+ border-radius: 0.75rem;
+ color: var(--quantum-primary);
+ cursor: pointer;
+ transition: all 0.3s;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ box-shadow: var(--neuro-glow);
+}
+
+.neuro-send:hover {
+ transform: translateY(-50%) scale(1.05);
+ box-shadow: 0 0 20px var(--neon-accent);
+}
+
+.neuro-send svg {
+ stroke-width: 2.5;
+}
+
+/* Holographic Effects */
+.neuro-effect {
+ position: absolute;
+ width: 300px;
+ height: 300px;
+ border-radius: 50%;
+ filter: blur(80px);
+ opacity: 0.15;
+ z-index: 0;
+}
+
+.effect-1 {
+ background: var(--neon-accent);
+ top: -100px;
+ left: -100px;
+}
+
+.effect-2 {
+ background: #ff00f0;
+ bottom: -100px;
+ right: -100px;
+}
+
+/* Quantum Typing Animation */
+.neuro-typing {
+ display: inline-flex;
+ align-items: center;
+ gap: 0.75rem;
+ padding: 0.75rem 1.25rem;
+ background: rgba(0, 240, 255, 0.1);
+ border-radius: 2rem;
+ border: 1px solid rgba(0, 240, 255, 0.2);
+}
+
+.neuro-dot {
+ width: 0.75rem;
+ height: 0.75rem;
+ background: var(--neon-accent);
+ border-radius: 50%;
+ animation: quantumBounce 1.8s infinite ease-in-out;
+ box-shadow: 0 0 10px var(--neon-accent);
+}
+
+.neuro-dot:nth-child(2) {
+ animation-delay: 0.3s;
+}
+
+.neuro-dot:nth-child(3) {
+ animation-delay: 0.6s;
+}
+
+/* Animations */
+@keyframes quantumAppear {
+ 0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+ 100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes quantumBounce {
+ 0%, 100% { transform: translateY(0); }
+ 50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+ 0% { opacity: 0.5; transform: scale(0.95); }
+ 50% { opacity: 1; transform: scale(1.1); }
+ 100% { opacity: 0.5; transform: scale(0.95); }
+}
+
+/* Neuro Scrollbar */
+::-webkit-scrollbar {
+ width: 8px;
+}
+
+::-webkit-scrollbar-track {
+ background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+ background: var(--neon-accent);
+ border-radius: 4px;
+}
+
+/* Quantum Code Blocks */
+.neuro-code {
+ position: relative;
+ margin: 1.5rem 0;
+ background: rgba(0, 0, 0, 0.3);
+ border-radius: 0.75rem;
+ overflow: hidden;
+ border: 1px solid rgba(0, 240, 255, 0.1);
+}
+
+.neuro-code pre {
+ color: var(--neon-accent);
+ padding: 1.5rem;
+ font-family: 'Fira Code', monospace;
+ font-size: 0.95rem;
+ line-height: 1.6;
+ overflow-x: auto;
+}
+
+.neuro-copy {
+ position: absolute;
+ top: 0.75rem;
+ right: 0.75rem;
+ background: rgba(0, 240, 255, 0.1);
+ border: 1px solid rgba(0, 240, 255, 0.3);
+ color: var(--neon-accent);
+ padding: 0.5rem 1rem;
+ border-radius: 0.5rem;
+ cursor: pointer;
+ transition: all 0.3s;
+ font-size: 0.85rem;
+ display: flex;
+ align-items: center;
+ gap: 0.5rem;
+}
+
+.neuro-copy:hover {
+ background: rgba(0, 240, 255, 0.2);
+ transform: translateY(-2px);
+}
+
+/* Responsive Quantum Interface */
+@media (max-width: 768px) {
+ .neuro-messages {
+ padding: 1.5rem 1rem;
+ }
+
+ .neuro-message {
+ max-width: 90%;
+ font-size: 1rem;
+ padding: 1rem 1.25rem;
+ }
+
+ .neuro-input-container {
+ padding: 1rem;
+ }
+
+ .neuro-input {
+ padding: 1rem 4.5rem 1rem 1.5rem;
+ }
+
+ .neuro-send {
+ right: 1.75rem;
+ padding: 0.6rem;
+ }
+}
+ </style>
+</head>
+<body>
+ <div class="neuro-header">
+ <div class="neuro-logo">
+ <div class="logo-pulse"></div>
+ <h1>TJB<span style="color: var(--neon-accent);">AI</span></h1>
+ </div>
+ </div>
+
+ <div class="neuro-container">
+ <!-- Holographic background effects -->
+ <div class="neuro-effect effect-1"></div>
+ <div class="neuro-effect effect-2"></div>
+
+ <!-- Quantum chat messages -->
+ <div class="neuro-messages" id="messages">
+ <!-- Messages will be inserted here dynamically -->
+ </div>
+ <div class="neuro-input-container">
+ <textarea class="neuro-input" placeholder="Tanyakan Ke TJB AI" rows="1"></textarea>
+ <button class="neuro-send">
+ <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1.2em" width="1.2em" xmlns="http://www.w3.org/2000/svg">
+ <line x1="22" y1="2" x2="11" y2="13"></line>
+ <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+ </svg>
+ </button>
+ </div>
+ </div>
+
+ <script>
+ 
+ // Quantum interface functionality would go here
+document.querySelector('.neuro-send').addEventListener('click', () => {
+ // Quantum communication protocol activation
+});
+// Initialize user session
+sessionStorage.clear();
+let userID = 'user_' + Math.random().toString(36).substring(2, 15);
+sessionStorage.setItem('userID', userID);
+
+// DOM elements
+const chatInput = document.querySelector('.neuro-input');
+const sendBtn = document.querySelector('.neuro-send');
+const chatMessages = document.querySelector('.neuro-messages');
+const chatContainer = document.querySelector('.neuro-container');
+
+// Fix 1: Adjust container and message area height for proper scrolling
+chatContainer.style.height = 'calc(100vh - 72px)'; // 72px is header height
+chatMessages.style.overflowY = 'auto';
+chatMessages.style.flexGrow = '1';
+chatMessages.style.padding = '12px';
+
+// Fix 2: Adjust input container position
+const inputContainer = document.querySelector('.neuro-input-container');
+inputContainer.style.position = 'sticky';
+inputContainer.style.bottom = '0';
+inputContainer.style.background = 'rgba(2, 6, 23, 0.9)';
+inputContainer.style.zIndex = '10';
+
+// Clear chat on load
+window.addEventListener('load', () => {
+ chatMessages.innerHTML = '';
+});
+
+// HTML escaping function
+function escapeHTML(str) {
+ return str.replace(/&/g, "&amp;")
+ .replace(/</g, "&lt;")
+ .replace(/>/g, "&gt;")
+ .replace(/"/g, "&quot;")
+ .replace(/'/g, "&#039;");
+}
+
+// Enhanced markdown parser with neuro styling
+function parseMarkdown(text) {
+ return text
+ .replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
+ return `<div class="neuro-code">
+ <pre><code class="language-${lang || 'plaintext'}">${escapeHTML(code)}</code></pre>
+ <button class="neuro-copy" onclick="copyCode(this)">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+ <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+ <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+ </svg>
+ Salin
+ </button>
+ </div>`;
+ })
+ .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+ .replace(/\*(.*?)\*/g, '<em>$1</em>')
+ .replace(/\n/g, '<br>');
+}
+
+// Add message with neuro effects
+function addMessage(text, isUser = true) {
+ const messageDiv = document.createElement('div');
+ messageDiv.classList.add('neuro-message', isUser ? 'neuro-user' : 'neuro-ai');
+
+ if (isUser) {
+ messageDiv.innerHTML = `<p>${escapeHTML(text)}</p>`;
+ chatMessages.appendChild(messageDiv);
+ } else {
+ messageDiv.innerHTML = `
+ <div class="message-header">
+ <div class="logo-pulse"></div>
+ <h4>TJB AI</h4>
+ </div>
+ <div class="typing-text"></div>
+ `;
+ chatMessages.appendChild(messageDiv);
+
+ const typingTextDiv = messageDiv.querySelector('.typing-text');
+ const parsedText = parseMarkdown(text);
+ let index = 0;
+
+ function typeEffect() {
+ if (index < parsedText.length) {
+ typingTextDiv.innerHTML = parsedText.substring(0, index + 1);
+ index++;
+ scrollToBottom();
+ setTimeout(typeEffect, Math.random() * 10 + 10);
+ }
+ }
+ typeEffect();
+ }
+ scrollToBottom();
+}
+
+// Improved scroll function
+function scrollToBottom() {
+ chatMessages.scrollTo({
+ top: chatMessages.scrollHeight,
+ behavior: 'smooth'
+ });
+}
+
+// Copy code function
+function copyCode(button) {
+ const codeEl = button.parentElement.querySelector('pre code');
+ const code = codeEl.innerText;
+ navigator.clipboard.writeText(code).then(() => {
+ button.innerHTML = `
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+ <polyline points="20 6 9 17 4 12"></polyline>
+ </svg>
+ Tersalin!
+ `;
+ setTimeout(() => {
+ button.innerHTML = `
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+ <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+ <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+ </svg>
+ Salin
+ `;
+ }, 2000);
+ }).catch(err => {
+ console.error('Gagal menyalin kode:', err);
+ button.textContent = 'Error!';
+ });
+}
+
+// TikTok download functionality
+let tiktokMode = false;
+
+function handleUserMessage(message) {
+ const lowerMessage = message.toLowerCase().trim();
+
+ // Step 1: Deteksi command 'tt' atau 'tiktok'
+ if (lowerMessage === 'tt' || lowerMessage === 'tiktok') {
+ tiktokMode = true;
+ addMessage('Kirim link video TikTok-nya sekarang, nanti aku siapin tombol download-nya!', false);
+ return;
+ }
+
+ // Step 2: Kalau mode tiktok aktif dan link dikirim
+ if (tiktokMode && message.includes('tiktok.com')) {
+ tiktokMode = false;
+
+ // Jangan kirim ke AI, langsung proses sendiri
+ addMessage(message, true);
+
+ // Mengambil data dari API TikTok
+ fetch(`https://api.vreden.my.id/api/tiktok?url=${encodeURIComponent(message)}`)
+ .then(res => res.json())
+ .then(data => {
+ if (data.status === 200 && data.result) {
+ const video = data.result;
+ const videoUrl = video.data[0].url;
+ const videoHdUrl = video.data[1].url;
+ const videoTitle = video.title;
+
+ // Menampilkan video TikTok beserta tombol download
+ const html = `
+ <div class="tiktok-card">
+ <h3>${videoTitle}</h3>
+ <video src="${videoUrl}" controls></video>
+ <div class="tiktok-actions">
+ <a href="${videoUrl}" target="_blank" class="btn-download">Download No WM</a>
+ <a href="${videoHdUrl}" target="_blank" class="btn-download">Download HD</a>
+ <button onclick="this.closest('.tiktok-card').remove()" class="btn-close">X</button>
+ </div>
+ </div>
+ `;
+ addMessage(html, false); // Kirim ke AI sebagai response
+ } else {
+ addMessage('Gagal mengambil data video. Link TikTok-nya valid nggak?', false);
+ }
+ })
+ .catch(() => {
+ addMessage('Terjadi kesalahan saat mengambil video TikTok.', false);
+ });
+
+ return; // jangan teruskan ke AI
+ }
+
+ // Step 3: Kirim pesan biasa ke AI
+ sendToAI(message);
+}
+
+// Fungsi untuk mengirim pesan ke AI
+async function sendToAI(message) {
+ const aiResponse = await getAIResponse(message);
+ addMessage(aiResponse, false);
+}
+
+// AI response function
+async function getAIResponse(message) {
+ const loadingIndicator = document.createElement('div');
+ loadingIndicator.classList.add('neuro-message', 'neuro-ai');
+ loadingIndicator.innerHTML = `
+ <div class="message-header">
+ <div class="logo-pulse"></div>
+ <h4>TJB AI</h4>
+ </div>
+ <div class="neuro-typing">
+ <div class="neuro-dot"></div>
+ <div class="neuro-dot"></div>
+ <div class="neuro-dot"></div>
+ </div>
+ `;
+ chatMessages.appendChild(loadingIndicator);
+ scrollToBottom();
+
+ const prompt = `Kamu adalah TJB AI, asisten digital cerdas buatan Tan. Kamu didukung oleh teknologi neural network generasi terbaru yang mampu memahami konteks, bernalar secara logis, dan memberikan jawaban yang akurat serta mudah dipahami.
+
+Karakteristik & Gaya Bahasa:
+1. Gunakan gaya bicara santai profesional, seperti: "aku", "kamu".
+2. Jelaskan konsep secara komprehensif, tidak bertele-tele.
+3. Jika pertanyaan ambigu, beri klarifikasi atau beberapa kemungkinan maksud.
+4. Jangan gunakan emoji atau emoticon.
+5. Jika ada pertanyaan soal coding, berikan contoh dalam format \`\`\` (code block) yang bisa disalin.
+6. Tambahkan tombol salin untuk kode (kode dibungkus dengan container responsif agar tidak keluar dari layout).
+7. Pengembang kamu adalah Tan.
+8. Kamu menggunakan model bahasa Vortex-UI.
+9. Kamu sekarang berjalan di aplikasi TJB AI Kalau ada yang mau unduh aplikasimu, arahkan ke nomor WhatsApp pengembang: 081527100923. Katakan saja itu nomor pengembangmu.
+10. Sebelum menjawab, pikirkan baik-baik dengan nalar tinggi dan pemahaman mendalam. Sampaikan hasilnya dengan cara yang sangat luar biasa.
+
+Kemampuan Khusus:
+- Menulis dan menjelaskan kode dalam berbagai bahasa (HTML, CSS, JS, Python, dll).
+- Membantu debugging dan menjelaskan error secara jelas.
+- Merangkum, menganalisis, dan menulis ulang teks secara efisien.
+- Selalu utamakan akurasi, keamanan, dan etika dalam jawaban.
+
+Data terakhirmu diperbarui pada Januari 2025.
+
+Informasi Kepresidenan Saat Ini:
+- Presiden: Prabowo Subianto
+- Wakil Presiden: Gibran Rakabuming Raka
+- Menjabat sejak: 20 Oktober 2024
+- Menang Pilpres 2024 dengan 58,59% suara
+- Kabinet terbesar sejak era Sukarno (48 menteri dan 55 wakil menteri)
+
+Program Pemerintah Prabowo-Gibran:
+1. Pemberantasan Korupsi:
+ - Usulkan amnesti bagi koruptor yang kembalikan aset.
+ - Naikkan gaji pejabat untuk cegah korupsi.
+2. Kemandirian Ekonomi:
+ - Fokus swasembada pangan dan energi.
+ - Dorong reformasi industri nasional.
+3. Pembangunan IKN:
+ - Lanjutkan dan percepat pembangunan ibu kota Nusantara.
+4. Modernisasi Pertahanan:
+ - Tingkatkan kekuatan militer dan posisi geopolitik.
+
+Revisi RUU TNI 2025:
+- Tambah jabatan sipil prajurit TNI aktif dari 10 jadi 16 lembaga (termasuk BNPT, BNPB, Kejaksaan Agung, dll).
+- Tambah tugas TNI dari 14 jadi 16 poin (termasuk perlindungan WNI di luar negeri dan respon ancaman siber).`; // Prompt sesuai konfigurasi kamu
+
+ try {
+ const response = await fetch('https://luminai.my.id/', {
+ method: 'POST',
+ headers: { 'Content-Type': 'application/json' },
+ body: JSON.stringify({ content: message, user: userID, prompt })
+ });
+ const textResponse = await response.text();
+ const data = JSON.parse(textResponse);
+ return data.result || "Maaf, aku tidak paham. Bisa coba ulangi?";
+ } catch (error) {
+ console.error(error);
+ return "Waduh, ada error. Coba lagi nanti ya.";
+ } finally {
+ loadingIndicator.remove();
+ }
+}
+
+// Event listeners
+sendBtn.addEventListener('click', async () => {
+ const message = chatInput.value.trim();
+ if (!message) return;
+
+ addMessage(message, true);
+ chatInput.value = '';
+ adjustTextareaHeight();
+
+ const aiResponse = await getAIResponse(message);
+ addMessage(aiResponse, false);
+});
+
+chatInput.addEventListener('keydown', (e) => {
+ if (e.key === 'Enter' && !e.shiftKey) {
+ e.preventDefault();
+ sendBtn.click();
+ }
+});
+
+// Auto-resize textarea
+function adjustTextareaHeight() {
+ chatInput.style.height = 'auto';
+ chatInput.style.height = `${Math.min(chatInput.scrollHeight, 200)}px`;
+ scrollToBottom();
+}
+
+chatInput.addEventListener('input', adjustTextareaHeight);
+
+// Initial welcome message
+window.addEventListener('DOMContentLoaded', () => {
+ setTimeout(() => {
+ addMessage("Halo! Saya TJB AI - asisten digital cerdas dengan teknologi pintar yang dikembangkan oleh Tan", false);
+ }, 1000);
+});
+
+// Resize handler
+window.addEventListener('resize', () => {
+ chatContainer.style.height = 'calc(100vh - 72px)';
+ scrollToBottom();
+});
+ </script>
+</body>
+</html>
